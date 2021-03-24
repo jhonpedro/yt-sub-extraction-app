@@ -1,70 +1,57 @@
 from flask import request
 from flask_restful import Resource
 from youtube_transcript_api import YouTubeTranscriptApi as api
-import nltk
-import os
+import functions
 
 
 class YoutubeExtraction(Resource):
-  def get(self):
-    YtVideoId = request.args.get('videourl')
+    def get(self):
+        YtVideoId = request.args.get('videourl')
 
-    if len(YtVideoId) > 11:
-      YtVideoId = YtVideoId[-11:]
+        if len(YtVideoId) > 11:
+            YtVideoId = YtVideoId[-11:]
 
-    try:
-      transcriptList = api.get_transcript(YtVideoId, languages=['pt'])
+        try:
+            transcriptList = api.get_transcript(YtVideoId, languages=['pt'])
 
-      allTranscriptText = ''
+            allTranscriptText = ''
 
-      for transcript in transcriptList:
-        allTranscriptText += transcript['text'] + ' '
+            for transcript in transcriptList:
+                allTranscriptText += transcript['text'] + ' '
 
-      stopWordsPT = nltk.corpus.stopwords.words('portuguese')
+            stopWordsPT = nltk.corpus.stopwords.words('portuguese')
 
-      allWords = []
+            allWords = []
 
-      for word in allTranscriptText.split(' '):
-        if word not in stopWordsPT:
-          allWords.append(word)
+            for word in allTranscriptText.split(' '):
+                if word not in stopWordsPT:
+                    allWords.append(word)
 
-      allWordsStem = []
+            allWordsStem = []
 
-      # Stem the word https://www.nltk.org/howto/stem.html
-      for word in allWords:
-        if len(word) >1:
-          if not word.startswith('['):
-            allWordsStem.append(nltk.stem.RSLPStemmer().stem(word))
+            # Stem the word https://www.nltk.org/howto/stem.html
+            for word in allWords:
+                if len(word) > 1:
+                    if not word.startswith('['):
+                        allWordsStem.append(nltk.stem.RSLPStemmer().stem(word))
 
-      mostSpoken = []
+            # This variable below is an array with tuples like this: (word, countOcurrenceOfTheWord)
+            wordWithCountTuples = functions.countByWordsTimeSpoken(allWordsStem)
 
-      for word in allWordsStem:
-        wordOcurruence = allWordsStem.count(word)
-        mostSpoken.append((word, wordOcurruence))
+            wordWithCountTuplesNormalized = []
 
-      mostSpokenSize = len(mostSpoken)
+            for topTenStem in wordWithCountTuples:
+                for word in allWords:
+                    if word.startswith(topTenStem[0]):
+                        wordWithCountTuplesNormalized.append((word, topTenStem[1]))
+                        break
 
-      def sortMostSpoken(tupleMostSpoken):
-        return tupleMostSpoken[1]
-          
-
-      mostSpoken.sort(key=sortMostSpoken, reverse=True)
-
-      topTenMostSpokenStem = []
-
-      for mostSpokenTuple in mostSpoken:
-        if mostSpokenTuple not in topTenMostSpokenStem:
-          topTenMostSpokenStem.append(mostSpokenTuple)
-
-      mostSpokenNormalized = []
-
-      for topTenStem in topTenMostSpokenStem:
-        for word in allWords:
-          if(word.startswith(topTenStem[0])):
-            mostSpokenNormalized.append((word, topTenStem[1]))
-            break
-
-      return {'tenMostSpoken': mostSpokenNormalized[:10], 'wordsTimesSpoken': mostSpokenNormalized}
-    except Exception as error:
-      print(error)
-      return {'message': 'this video subtitle may be disabled, try again this video later'}
+            return {
+                'tenMostSpoken': wordWithCountTuplesNormalized[:10],
+                'wordsTimesSpoken': wordWithCountTuplesNormalized,
+            }
+        except Exception as error:
+            print(error)
+            return {
+                'message': 'this video subtitle may be disabled, try again this video later'
+            }
