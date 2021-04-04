@@ -1,12 +1,13 @@
 from flask import request
 from flask_restful import Resource
 from youtube_transcript_api import YouTubeTranscriptApi as api
-import functions
-
+import nltk
+from resources.functions import countByWordsTimesSpoken
 
 class YoutubeExtraction(Resource):
     def get(self):
         YtVideoId = request.args.get('videourl')
+        removeSpokenOnce = bool(request.args.get('rso'))
 
         if len(YtVideoId) > 11:
             YtVideoId = YtVideoId[-11:]
@@ -36,8 +37,10 @@ class YoutubeExtraction(Resource):
                         allWordsStem.append(nltk.stem.RSLPStemmer().stem(word))
 
             # This variable below is an array with tuples like this: (word, countOcurrenceOfTheWord)
-            wordWithCountTuples = functions.countByWordsTimeSpoken(allWordsStem)
+            wordWithCountTuples = countByWordsTimesSpoken.countByWordsTimesSpoken(allWordsStem, removeSpokenJustOnce=removeSpokenOnce)
 
+            # This will contain the words normalized, because in count of words 
+            # we remove the sufix ex: turning -> turn || virando -> vir
             wordWithCountTuplesNormalized = []
 
             for topTenStem in wordWithCountTuples:
