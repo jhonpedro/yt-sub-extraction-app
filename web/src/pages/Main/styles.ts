@@ -7,7 +7,7 @@ export const MainContainer = styled.main`
 
 	strong {
 		text-align: center;
-		font-size: 3rem;
+		font-size: 5rem;
 	}
 
 	p {
