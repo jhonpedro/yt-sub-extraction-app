@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../../components/Header'
 
 import { Button, Form, Input, MainContainer } from './styles'
 
 function MainPage() {
+	const [youtubeLink, setYoutubeLink] = useState('')
+
+	function handleChangeYoutubeLink(event: React.ChangeEvent<HTMLInputElement>) {
+		setYoutubeLink(event.target.value)
+	}
+
 	return (
 		<React.Fragment>
 			<Header />
@@ -14,7 +20,11 @@ function MainPage() {
 					Desenvolvida meramente para fins academicos.
 				</p>
 				<Form>
-					<Input placeholder='Url do vídeo' />
+					<Input
+						placeholder='Url do vídeo'
+						value={youtubeLink}
+						onChange={handleChangeYoutubeLink}
+					/>
 					<Button type='submit'>Enviar</Button>
 				</Form>
 			</MainContainer>
