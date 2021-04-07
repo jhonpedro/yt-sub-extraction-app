@@ -31,4 +31,8 @@ export default createGlobalStyle`
     text-decoration: none;
     color: inherit;
   }
+
+  .Toastify__toast-body {
+    font-size: 1.7rem;
+  }
 `
