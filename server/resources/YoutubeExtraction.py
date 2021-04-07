@@ -13,7 +13,7 @@ class YoutubeExtraction(Resource):
             YtVideoId = YtVideoId[-11:]
 
         try:
-            transcriptList = api.get_transcript(YtVideoId, languages=['pt'])
+            transcriptList = api.get_transcript(YtVideoId, languages=['pt', 'en'])
 
             allTranscriptText = ''
 
@@ -50,11 +50,10 @@ class YoutubeExtraction(Resource):
                         break
 
             return {
-                'tenMostSpoken': wordWithCountTuplesNormalized[:10],
                 'wordsTimesSpoken': wordWithCountTuplesNormalized,
             }
         except Exception as error:
             print(error)
             return {
                 'message': 'this video subtitle may be disabled, try again this video later'
-            }
+            }, 400
