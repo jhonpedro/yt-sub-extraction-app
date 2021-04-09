@@ -4,16 +4,19 @@ from youtube_transcript_api import YouTubeTranscriptApi as api
 import nltk
 from resources.functions import countByWordsTimesSpoken
 
+
 class YoutubeExtraction(Resource):
     def get(self):
         YtVideoId = request.args.get('videourl')
         removeSpokenOnce = bool(request.args.get('rso'))
 
         if len(YtVideoId) > 11:
-            YtVideoId = YtVideoId[-11:]
+            videioIdPosition = YtVideoId.find('v=') + 2
+            YtVideoId = YtVideoId[videioIdPosition:videioIdPosition + 11]
 
         try:
-            transcriptList = api.get_transcript(YtVideoId, languages=['pt', 'en'])
+            transcriptList = api.get_transcript(
+                YtVideoId, languages=['pt', 'en'])
 
             allTranscriptText = ''
 
@@ -37,16 +40,18 @@ class YoutubeExtraction(Resource):
                         allWordsStem.append(nltk.stem.RSLPStemmer().stem(word))
 
             # This variable below is an array with tuples like this: (word, countOcurrenceOfTheWord)
-            wordWithCountTuples = countByWordsTimesSpoken.countByWordsTimesSpoken(allWordsStem, removeSpokenJustOnce=removeSpokenOnce)
+            wordWithCountTuples = countByWordsTimesSpoken.countByWordsTimesSpoken(
+                allWordsStem, removeSpokenJustOnce=removeSpokenOnce)
 
-            # This will contain the words normalized, because in count of words 
+            # This will contain the words normalized, because in count of words
             # we remove the sufix ex: turning -> turn || virando -> vir
             wordWithCountTuplesNormalized = []
 
             for topTenStem in wordWithCountTuples:
                 for word in allWords:
                     if word.startswith(topTenStem[0]):
-                        wordWithCountTuplesNormalized.append((word, topTenStem[1]))
+                        wordWithCountTuplesNormalized.append(
+                            (word, topTenStem[1]))
                         break
 
             return {
