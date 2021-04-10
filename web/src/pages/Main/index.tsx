@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../../components/Header'
 import axios from '../../services/axios'
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import {
@@ -54,7 +55,12 @@ function MainPage() {
 				<strong>Olá, seja bem vindo!</strong>
 				<p>
 					Com essa aplicação é possível analisar legendas de vídeos do Youtube.
-					Desenvolvida meramente para fins academicos.
+				</p>
+				<p>
+					Aqui, você pode inserir um link de um vídeo do Youtube e se esse vídeo
+					houver legendas diponíveis, você poderá visualizar quais foram as
+					palavras mais faladas do vídeo. Se você quiser saber como funciona
+					olhe na página <Link to='/about'>sobre</Link>.
 				</p>
 				<Form onSubmit={handleSubmit}>
 					<Input
