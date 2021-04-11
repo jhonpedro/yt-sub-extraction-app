@@ -10,9 +10,12 @@ class YoutubeExtraction(Resource):
         YtVideoId = request.args.get('videourl')
         rso = request.args.get('rso')
 
-        # Verify if rso is an integer and converts it to an boolean
-        if isinstance(rso, int):
-            rso = bool(int(rso))
+        # Verify if rso is an str and converts it to an boolean
+        if isinstance(rso, str):
+            try:
+                rso = bool(int(rso))
+            except:
+                return { 'message': 'rso must be an integer' }, 403
         else:
             rso = False
 
