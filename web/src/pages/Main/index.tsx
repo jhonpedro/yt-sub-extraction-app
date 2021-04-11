@@ -18,10 +18,7 @@ function MainPage() {
 	const [youtubeLink, setYoutubeLink] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
 	const [wordsTimesSpoken, setWordsTimesSpoken] = useState<WordsTimesSpoken>([])
-
-	function handleChangeYoutubeLink(event: React.ChangeEvent<HTMLInputElement>) {
-		setYoutubeLink(event.target.value)
-	}
+	const [removeRSO, setRemoveRSO] = useState(false)
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
@@ -31,7 +28,9 @@ function MainPage() {
 		setIsLoading(true)
 
 		try {
-			const response = await axios.get(`/?videourl=${youtubeLink}`)
+			const response = await axios.get(
+				`/?videourl=${youtubeLink}&rso=${Number(removeRSO)}`
+			)
 
 			const wordsWithTimesSponkes = response.data
 				.wordsTimesSpoken as WordsTimesSpoken
@@ -46,6 +45,14 @@ function MainPage() {
 		} finally {
 			setIsLoading(false)
 		}
+	}
+
+	function handleChangeYoutubeLink(event: React.ChangeEvent<HTMLInputElement>) {
+		setYoutubeLink(event.target.value)
+	}
+
+	function handleChangeRemoveRSO() {
+		setRemoveRSO(!removeRSO)
 	}
 
 	return (
@@ -68,6 +75,17 @@ function MainPage() {
 						value={youtubeLink}
 						onChange={handleChangeYoutubeLink}
 					/>
+					<div className='remove-spoken-once'>
+						<label>
+							<input
+								type='checkbox'
+								checked={removeRSO}
+								onChange={handleChangeRemoveRSO}
+							/>
+							<span></span>
+						</label>
+						<span>Remover palavras faladas somente uma vez</span>
+					</div>
 					<Button type='submit' loading={String(isLoading)}>
 						Enviar
 					</Button>

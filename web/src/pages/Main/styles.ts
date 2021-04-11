@@ -9,7 +9,7 @@ export const MainContainer = styled.main`
 	margin: 0 auto;
 	padding-top: 5rem;
 
-	strong {
+	> strong {
 		text-align: center;
 		font-size: 5rem;
 	}
@@ -25,7 +25,6 @@ export const MainContainer = styled.main`
 `
 
 export const Input = styled.input`
-	width: 50%;
 	padding: 2rem;
 	border: 2px solid #f1f1f1;
 	border-radius: 1.5rem;
@@ -49,7 +48,6 @@ const loading = keyframes`
 `
 
 export const Button = styled.button<ButtonProps>`
-	width: 20%;
 	padding: 2rem;
 	border: 0;
 	border-radius: 1.5rem;
@@ -92,6 +90,75 @@ export const Button = styled.button<ButtonProps>`
 export const Form = styled.form`
 	display: flex;
 	justify-content: center;
+	flex-wrap: wrap;
+
+	.remove-spoken-once {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 2rem;
+
+		> span {
+			font-size: 1.6rem;
+			margin-left: 1rem;
+		}
+
+		order: 3;
+	}
+
+	.remove-spoken-once label {
+		width: 4rem;
+		height: 2rem;
+		z-index: 2;
+
+		input {
+			width: 0;
+			height: 0;
+		}
+
+		span {
+			display: inline-block;
+			width: 4rem;
+			height: 2rem;
+			background-color: #dcdcdd;
+			border-radius: 1rem;
+			box-shadow: inset 0 0 1rem rgba(0, 0, 0, 0.2);
+			position: relative;
+		}
+
+		span::before {
+			content: ' ';
+			width: 2rem;
+			height: 2rem;
+			position: absolute;
+			background-color: #eff1f3;
+			border: 1px solid #c3c3c3;
+			border-radius: 100%;
+			transition: ease 300ms;
+			top: -0.1rem;
+			left: 0px;
+			z-index: 2;
+			opacity: 1;
+		}
+
+		input:checked + span::before {
+			left: 2.1rem;
+			background-color: var(--color-secondary);
+		}
+		input:checked + span {
+			background-color: var(--color-primary);
+		}
+	}
+
+	> input {
+		width: 65%;
+	}
+
+	> button {
+		width: 30%;
+		order: 2;
+	}
 `
 
 export const WordsWithTimesSpoken = styled.table`
