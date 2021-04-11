@@ -1,9 +1,8 @@
-# Youtube subtitle extraction app
+We need to install all the nltk packages before start the flask aplication
 
-This app is currently under development, but it can do some cool things, like count the occurrence of each word
-in a video subtitle of the Youtube
+```
+# Installing nltk packages
 
-You can see each part of the project in different repositories.
+$ python -m nltk.downloader -d .\env\Lib\site-packages\  all
 
-- [API](https://github.com/jhonpedro/yt-sub-extraction-api/server)
-- [WEB](https://github.com/jhonpedro/yt-sub-extraction-api/web)
+```
