@@ -8,7 +8,15 @@ from resources.functions import countByWordsTimesSpoken
 class YoutubeExtraction(Resource):
     def get(self):
         YtVideoId = request.args.get('videourl')
-        removeSpokenOnce = bool(request.args.get('rso'))
+        rso = request.args.get('rso')
+
+        # Verify if rso is an integer and converts it to an boolean
+        if isinstance(rso, int):
+            rso = bool(int(rso))
+        else:
+            rso = False
+
+        removeSpokenOnce = rso
 
         if len(YtVideoId) > 11:
             videioIdPosition = YtVideoId.find('v=') + 2
