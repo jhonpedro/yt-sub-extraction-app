@@ -15,7 +15,7 @@ class YoutubeExtraction(Resource):
             try:
                 rso = bool(int(rso))
             except:
-                return { 'message': 'rso must be an integer' }, 403
+                return { 'message': 'rso must be <0> or <1>' }, 403
         else:
             rso = False
 
