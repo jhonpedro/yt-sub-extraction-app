@@ -3,7 +3,7 @@ from typing import List, Tuple
 ListOfWords = List[str]
 ListOfWordsCounted = List[Tuple[str, int]]
 
-def countByWordsTimesSpoken(wordsArr: ListOfWords, removeSpokenJustOnce=False) -> ListOfWordsCounted:
+def exec(wordsArr: ListOfWords, removeSpokenJustOnce=False) -> ListOfWordsCounted:
     wordWithCountTuples = []
 
     if removeSpokenJustOnce:

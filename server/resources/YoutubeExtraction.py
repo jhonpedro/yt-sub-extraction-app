@@ -51,7 +51,7 @@ class YoutubeExtraction(Resource):
                         allWordsStem.append(nltk.stem.RSLPStemmer().stem(word))
 
             # This variable below is an array with tuples like this: (word, countOcurrenceOfTheWord)
-            wordWithCountTuples = countByWordsTimesSpoken.countByWordsTimesSpoken(
+            wordWithCountTuples = countByWordsTimesSpoken.exec(
                 allWordsStem, removeSpokenJustOnce=removeSpokenOnce)
 
             # This will contain the words normalized, because in count of words
